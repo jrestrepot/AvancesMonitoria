@@ -1,0 +1,26 @@
+'''
+Método para separar por ubicación
+'''
+def create_idx(data):
+  i = 0
+  j = 0
+  indx = []
+  idx = 0
+  prevlat = data['Latitude[deg]'][0]
+  prevlon = data['Longitude[deg]'][0]
+  prevtrip = data['Trip'][0]
+  pendiente = False
+  for trip,lat,lon in zip(data['Trip'], data['Latitude[deg]'], data['Longitude[deg]']):
+    if pendiente:
+      idx += 1
+      pendiente = False
+    if prevlat!=lat or prevlon!=lon or prevtrip!=trip:
+      pendiente = True
+    indx.append(idx)
+    prevlat = lat
+    prevlon = lon
+    prevtrip = trip
+  return indx
+
+indices = create_idx(ev) #Reemplazar por phev si se desea calcular para los híbridos
+ev.insert(len(ev.columns),'Indx',indices)
